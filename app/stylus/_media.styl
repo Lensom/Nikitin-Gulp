@@ -1,0 +1,336 @@
+@import "_vars.styl"
+
+/*==========  Desktop First  ==========*/
+
+/* Large Devices, Wide Screens */
+@media (max-width : 1200px)
+	.notice
+		&__left
+			display none
+	
+	.rating
+		&__items 
+			flex-wrap wrap 
+		&__wrapper 
+			padding 10px 0 0
+		&__subtitle 
+			font-size 16px
+			line-height 22px
+		&__fill 
+			padding 15px 20px
+			line-height 24px
+			font-size 18px
+			margin-left 0
+		&__girl 
+			right -21px
+			width 550px
+			&-circle 
+				right -70px
+				width 530px
+		.title
+			max-width 380px
+			font-size 40px
+			line-height 48px
+	
+	.info
+		&__subtitle
+			min-height 60px
+			padding-bottom 0
+	
+
+/* Medium Devices, Desktops */
+@media (max-width : 992px)
+	.notice,
+	.overlay 
+		display none
+	.rating
+		&__items 
+			flex-wrap wrap
+		&__item 
+			margin 0 0 20px 0
+			width 50%
+		&__image 
+			flex-grow 1
+			justify-content center
+		&__fill 
+			margin-top 40px
+			font-size 16px
+	.card
+		&__item 
+			padding 38px 30px 34px
+		&__loan 
+			font-size 16px
+			padding 5px
+			&__price 
+				span 
+					font-size 28px
+		&__wrapper 
+			padding 40px 0
+	.btn
+		&__get
+			&-card 
+				padding 10px
+				font-size 14px
+	.text
+		font-size 14px
+	.footer
+		&__wrapper
+			padding 60px 0 24px
+		&__item
+			margin-bottom 16px
+		.text
+			font-size 13px
+			line-height 20px
+		&__subtitle
+			font-size 18px
+			line-height 25px
+			margin-bottom 20px
+	.seo
+		padding 60px 0
+	.info
+		&__wrapper 
+			padding 60px 0
+		&__item 
+			p, 
+			a 
+				font-size 14px
+	.subtitle
+		font-size 25px
+		line-height 30px
+	.offer
+		&__wrapper 
+			padding 60px 0 44px
+		&__sort
+			font-size 13px
+		&__item 
+			font-size 13px
+		&__add
+			span 
+				font-size 11px
+		.btn
+			&__get
+				padding 5px 8px
+				font-size 11px
+
+/* Small Devices, Tablets */
+@media (max-width : 768px)
+	.rating
+		.title 
+			max-width 365px
+			font-size 38px
+			line-height 48px
+		&__girl 
+			width 500px
+			right -20px
+			&-circle 
+				width 500px
+	.card
+		&__wrapper 
+			flex-direction column 
+			align-items center
+		&__item 
+			background $white
+			box-shadow 0 15px 80px 0 rgba(74,81,74,0.13)
+			margin-bottom 20px
+			padding 20px 30px
+		&__loan 
+			max-width 200px
+			margin 25px auto 0
+		&__button
+			max-width 200px
+			margin 10px auto 0
+		&__deadline
+			margin-top 20px
+	.btn
+		&__get
+			&-card 
+				padding 11.5px
+	
+	.footer
+		&__items 
+			flex-direction column 
+		&__item
+			width 100%
+			max-width none 
+			&:nth-child(2)
+				margin 0
+	.seo 
+		padding 60px 0 40px
+	.text
+		font-size 13px
+	.info
+		&__item 
+			width 50%
+		&__subtitle
+			font-size 13px
+			min-height 55px
+	
+	.offer
+		.btn__get
+			padding 15px
+			width 100%
+			font-size 13px
+			margin 20px 0
+		&__navigation
+			display none
+		&__item
+			flex-direction column
+			align-items center 
+			justify-content center
+			margin-bottom 20px
+			padding 20px 10px
+			&:after
+				width 100%
+		&__inner
+			width 100%
+			padding-right 0
+			text-align center
+			&:nth-child(2)
+				width 160px
+		&__logo
+			img 
+				margin 0 auto
+		&__bar
+			margin 16px 0
+		&__mobile
+			display block
+			color #919791
+		&__body
+			width 240px
+			text-align center
+			flex-direction column
+			&-inner 
+				&:nth-child(1),
+				&:nth-child(2),
+				&:nth-child(3)
+					display flex
+					justify-content space-between
+					width 100%
+					font-size 15px
+					line-height 20px
+					margin-bottom 15px
+					color#2C2F2C
+		&__add 
+			display none
+		&__rating
+			.offer__mobile
+				display none
+		&__get
+			max-width 250px
+			margin 0 auto
+
+
+
+
+@media (max-width : 668px)
+	.notice
+		&__bottom 
+			left 0
+			bottom 0
+			right 0
+			margin 15px
+			padding 15px
+			h2 
+				margin 5px 0
+		&__wrapper 
+			flex-direction column 
+		&__logo 
+			margin-right 0
+		&__body 
+			text-align center
+	
+	.header
+		&__wrapper 
+			padding 20px 0
+		&__phone 
+			margin-right 10px
+			a 
+				font-size 16px
+
+	.rating
+		&__wrapper
+			flex-direction column 
+		&__items 
+			justify-content flex-start
+			z-index 1
+			position relative
+		&__item 
+			width 36%
+		&__fill 
+			position absolute
+			bottom 33px
+			right 104px
+			z-index 3
+			border-radius 20px 0 20px 20px
+		&__girl 
+			width 390px
+			&-circle 
+				right -40px
+				width 400px
+			
+
+	
+	.btn
+		&__get 
+			padding 12px 6px
+
+
+@media (max-width : 560px)
+	.rating
+		&__text 
+			padding 18px 0 92px
+	.info
+		&__item
+			width 100%
+			padding 0
+			margin-bottom 36px
+		&__subtitle
+			min-height auto
+			padding-bottom 18px
+/* Extra Small Devices, Phones */
+@media (max-width : 480px)
+	.rating
+		.title 
+			font-size 30px
+			line-height 38px
+		&__item 
+			width 50%
+			&:last-child
+				width 100%
+		&__girl
+			width 333px
+			right -80px
+			&-circle 
+				width 333px
+				right -137px
+		&__fill 
+			font-size 15px
+			line-height 20px
+			right 47px
+		&__subtitle 
+			font-size 15px
+			line-height 20px
+			
+	.notice
+		&__body 
+			.text 
+				font-size 14px
+	.header
+		&__phone
+			display none
+		&__mobile
+			display block
+		&__logo 
+			display flex
+			align-items center
+			a 
+				&:first-child
+					display none
+	
+	.btn
+		&__get 
+			padding 13px 20px
+
+/* Custom, iPhone Retina */
+@media (max-width : 320px)
+	/**/

@@ -1,0 +1,16 @@
+m-font-face( $font-family = "Arial", $file-path = "", $weight = normal, $style = normal, $asset-pipeline = false )
+	@font-face 
+		font-family  $font-family
+		font-weight  $weight
+		font-style   $style
+		font-display swap
+
+		if $asset-pipeline 
+			src: font-url($file-path+'.eot')
+			src: font-url($file-path+'.eot?#iefix') format('embedded-opentype'), font-url($file-path+'.woff') format('woff'), font-url($file-path+'.ttf') format('truetype')
+		else
+			src: url($file-path+'.eot')
+			src: url($file-path+'.eot?#iefix') format('embedded-opentype'), url($file-path+'.woff') format('woff'), url($file-path+'.ttf') format('truetype')
+
+m-font-face("Rubik", "../fonts/Rubik-Regular/Rubik-Regular", 400)
+m-font-face("Rubik", "../fonts/Rubik-Medium/Rubik-Medium", 500)
