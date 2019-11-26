@@ -1,157 +1,173 @@
-var gulp = require('gulp');
-var browserSync = require('browser-sync');
-var concat = require('gulp-concat');
-var del = require('del');
-var cache = require('gulp-cache');
-var autoprefixer = require('gulp-autoprefixer');
-var plumber = require('gulp-plumber');
-var stylus = require('gulp-stylus');
-var cleanCSS = require('gulp-clean-css');
-var uglify = require('gulp-uglify');
-var json = require('gulp-json-replace');
-// var rename = require('gulp-rename');
-var rigger = require('gulp-rigger');
-var sourcemaps = require('gulp-sourcemaps');
-// var watch = require('gulp-watch');
+const gulp = require('gulp'),
+    browserSync = require('browser-sync'),
+    concat = require('gulp-concat'),
+    del = require('gulp-clean'),
+    cache = require('gulp-cache'),
+    autoprefixer = require('gulp-autoprefixer'),
+    plumber = require('gulp-plumber'),
+    stylus = require('gulp-stylus'),
+    cleanCSS = require('gulp-clean-css'),
+    uglify = require('gulp-uglify'),
+    rename = require('gulp-rename'),
+    rigger = require('gulp-rigger'),
+    sourcemaps = require('gulp-sourcemaps'),
+    tinypng = require('gulp-tinypng-compress'),
+    watch = require('gulp-watch');
 
-gulp.task('browser-sync', () => {
-	browserSync.init({
+/* Start DEV version */
+
+const browser = () => {
+    browserSync.init({
 		server: {
-			baseDir: `app`,
+			baseDir: `./build`,
 		},
 		notify: false
-	});
-});
+    });
+}
 
-// User scripts
-gulp.task('libs-js', gulp.series(function () {
-	return gulp.src([
-		'app/libs/libs.js'
-	])
+const cacheClear = () => {
+    cache.clearAll();
+}
+
+const libsJs = (cb) => {
+    return gulp.src('app/libs/libs.js')
         .pipe(plumber())
         .pipe(rigger())
         .pipe(uglify())
         .pipe(concat('libs.min.js'))
-		.pipe(gulp.dest('app/js/'))
+		.pipe(gulp.dest('build/js/'))
 		.pipe(browserSync.reload({
 			stream: true
-		}));
-}));
+        }));
+    cb();
+}
 
-gulp.task('main-js', gulp.series(function () {
-	return gulp.src([
-		'app/js/common.js'
-	])
+const mainJs = (cb) => {
+    return gulp.src('app/js/common.js')
         .pipe(plumber())
-        // .pipe(uglify())
-        // .pipe(concat('common.min.js'))
-		.pipe(gulp.dest('app/js/'))
+        .pipe(rename('common.min.js'))
+        .pipe(gulp.dest('build/js/'))
 		.pipe(browserSync.reload({
 			stream: true
-		}));
-}));
+        }));
+    cb();
+}
 
-gulp.task('libs-css', gulp.series(function () {
-	return gulp.src([
-		'app/libs/libs.css'
-	])
+const libsCss = (cb) => {
+    return gulp.src('app/libs/libs.css')
+        .pipe(plumber())
+        .pipe(concat('libs.min.css'))
+        .pipe(gulp.dest('build/css/'))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
+    cb();
+}
+
+const mainCssDev = (cb) => {
+    return gulp.src('app/stylus/index.styl')
+    .pipe(plumber())
+    .pipe(sourcemaps.init())
+    .pipe(stylus({
+        'include css': true
+    }))
+    .pipe(autoprefixer('last 2 versions'))
+    .pipe(sourcemaps.write())
+    .pipe(rename('style.min.css'))
+    .pipe(gulp.dest('build/css/'))
+    .pipe(browserSync.reload({
+        stream: true
+    }));
+    cb();
+}
+
+const htmlDev = (cb) => {
+    return gulp.src('app/*.html')
         .pipe(plumber())
         .pipe(rigger())
-        .pipe(concat('libs.min.css'))
-        .pipe(gulp.dest('app/css/'))
+        .pipe(gulp.dest('build/'))
         .pipe(browserSync.reload({
             stream: true
         }));
-}));
+    cb();
+}
 
-gulp.task('main-css', gulp.series(function () {
-	return gulp.src([
-		'app/stylus/index.styl'
-	])
+const copyImg = (cb) => {
+    return gulp.src('app/img/')
+        .pipe(gulp.dest('build/img/'))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
+    cb();
+}
+
+const copyFonts = (cb) => {
+    return gulp.src('app/fonts/')
+        .pipe(gulp.dest('build/fonts/'))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
+    cb();
+}
+
+const watcher = () => {
+    watch('app/img/**/*.*', gulp.series(copyImg, cacheClear));
+    watch('app/fonts/**/*.*', gulp.series(copyFonts, cacheClear));
+    watch('app/libs/**/*.*', gulp.series(libsCss, libsJs, cacheClear));
+    watch('app/js/**/*.*', gulp.series(mainJs, cacheClear));
+    watch('app/stylus/**/*.*', gulp.series(mainCssDev, cacheClear));
+    watch('app/parts/*.html', gulp.series(htmlDev, cacheClear));
+    watch('app/*.html', gulp.series(htmlDev, cacheClear));
+}
+
+exports.default =  gulp.series(gulp.parallel(copyImg, copyFonts, libsCss, libsJs, mainJs, mainCssDev, htmlDev), gulp.parallel(browser, watcher));
+
+/* End DEV version */
+
+/* Start Production */
+
+const mainJsBuild = (cb) => {
+    return gulp.src('build/js/common.min.js')
         .pipe(plumber())
-        .pipe(sourcemaps.init())
-        .pipe(stylus({
-            'include css': true
+        .pipe(uglify())
+        .pipe(concat('common.min.js'))
+		.pipe(gulp.dest('build/js/'))
+    cb();
+}
+
+const mainCssBuild = (cb) => {
+    return gulp.src('build/css/style.min.css')
+        .pipe(plumber())
+        .pipe(cleanCSS({ level: { 2: { restructureRules: true } } }))
+        .pipe(gulp.dest('build/css/'))
+    cb();
+}
+
+const compressImg = (cb) => {
+    return gulp.src('build/img/main/**/*.{png,jpg}')
+        .pipe(plumber())
+        .pipe(tinypng({
+            key: 'f6wblB8l0yGZr5Z6PFy0CrDFGQX0PTN4',
+            log: true,
+            parallelMax: 30,
+            sameDest: true
         }))
-        .pipe(autoprefixer('last 2 versions'))
-        // .pipe(cleanCSS({ level: { 2: { restructureRules: true } } }))
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest('app/css/'))
-        .pipe(browserSync.reload({
-            stream: true
-        }));
-}));
+        .pipe(gulp.dest('build/img/main/'))
+    cb();
+}
 
+const removeModules = (cb) => {
+    return gulp.src('node_modules', {read: false})
+        .pipe(del());
+    cb();
+}
 
-// gulp.task('styl', () => {
-// 	return gulp.src(['project/stylus/**/main.styl']) // Take all style files
-// 		.pipe(plumber())
-// 		.pipe(stylus({
-// 			'include css': true,
-// 		})) // Take all import css and create 1 file
-// 		.pipe(autoprefixer(['last 2 versions']))
-// 		.pipe(gulp.dest(`project/css`))
-// 		.pipe(browserSync.reload({
-// 			stream: true
-// 		}));
-// });
+const copySupport = (cb) => {
+    return gulp.src(['.htaccess'])
+        .pipe(gulp.dest('build/'))
+    cb();
+}
 
-// gulp.task('html', gulp.series(function () {
-// 	return gulp.src(['project/*.html'])
-// 		.pipe(browserSync.reload({
-// 			stream: true
-// 		}));
-// }));
+exports.production = gulp.series(mainJsBuild, mainCssBuild, compressImg, removeModules);
 
-// gulp.task('minimg', gulp.series(function () {
-// 	return gulp.src([
-// 		'project/img/**/*.png',
-// 		'project/img/**/*.jpg',
-// 		'project/img/**/*.jpeg',
-// 	])
-// 		.pipe(imagemin('f6wblB8l0yGZr5Z6PFy0CrDFGQX0PTN4'))
-// 		.pipe(gulp.dest('project/img'));
-// }));
-
-// gulp.task('watch', function () {
-// 	gulp.watch('project/stylus/**/*.styl', gulp.series('styl'));
-// 	gulp.watch(['project/js/common.js'], gulp.series('js'));
-// 	gulp.watch('project/*.html', gulp.series('html'));
-// });
-
-// gulp.task('removebuild', function (cb) {
-// 	del.sync('build');
-// 	cb();
-// });
-
-// gulp.task('build', gulp.series('removebuild', 'minimg', 'styl', 'js', function (cb) {
-
-// 	gulp.src([
-// 		'project/*.html',
-// 		// 'project/.htaccess',
-// 	]).pipe(gulp.dest('build'));
-
-// 	gulp.src(['project/css/*.css', 'project/css/main.css'
-// 	])
-// 		.pipe(cleanCSS()) // Optional: min css
-// 		.pipe(gulp.dest('build/css'));
-
-// 	gulp.src(['project/js/scripts.js',])
-// 		.pipe(uglify()) // Optional: min js
-// 		.pipe(gulp.dest('build/js'));
-
-// 	gulp.src(['project/fonts/**/*',])
-// 		.pipe(gulp.dest('build/fonts'));
-
-// 	gulp.src(['project/img/**/*',])
-// 		.pipe(gulp.dest('build/img'));
-
-// 	cb();
-
-// }));
-
-// gulp.task('clearcache', function () {
-// 	return cache.clearAll();
-// });
-
-// gulp.task('default', gulp.parallel('watch', 'browser-sync'));
+/* End Production */
