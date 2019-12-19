@@ -1,16 +1,23 @@
-m-font-face( $font-family = "Arial", $file-path = "", $weight = normal, $style = normal, $asset-pipeline = false )
-	@font-face 
-		font-family  $font-family
-		font-weight  $weight
-		font-style   $style
-		font-display swap
+m-font-face( $font-family = "Arial", $file-path = "", $local-name = "", $weight, $style = normal) {
+	@font-face {
+		font-family: $font-family;
+		src: url($file-path + '.eot');
+		src: local($local-name),
+			 url($file-path + '.eot?#iefix') format('embedded-opentype'),
+			 url($file-path + '.woff2') format('woff2'),
+			 url($file-path + '.woff') format('woff'),
+			 url($file-path + '.ttf') format('truetype');
+		font-weight: $weight;
+		font-style: $style;
+		font-display: swap;
+	}
+}
 
-		if $asset-pipeline 
-			src: font-url($file-path+'.eot')
-			src: font-url($file-path+'.eot?#iefix') format('embedded-opentype'), font-url($file-path+'.woff') format('woff'), font-url($file-path+'.ttf') format('truetype')
-		else
-			src: url($file-path+'.eot')
-			src: url($file-path+'.eot?#iefix') format('embedded-opentype'), url($file-path+'.woff') format('woff'), url($file-path+'.ttf') format('truetype')
-
-m-font-face("Rubik", "../fonts/Rubik-Regular/Rubik-Regular", 400)
-m-font-face("Rubik", "../fonts/Rubik-Medium/Rubik-Medium", 500)
+/* Made Outer Sans */
+m-font-face("MADE Outer Sans", "../fonts/MADEOuterSans/MADEOuterSans-Black", "MADE Outer Sans Black", 900);
+m-font-face("MADE Outer Sans", "../fonts/MADEOuterSans/MADEOuterSans-Bold", "MADE Outer Sans Bold", bold);
+m-font-face("MADE Outer Sans", "../fonts/MADEOuterSans/MADEOuterSans-Light", "MADE Outer Sans Light", 300);
+m-font-face("MADE Outer Sans", "../fonts/MADEOuterSans/MADEOuterSans-Medium", "MADE Outer Sans Medium", 500);
+m-font-face("MADE Outer Sans", "../fonts/MADEOuterSans/MADEOuterSans-Regular", "MADE Outer Sans Regular", normal);
+m-font-face("MADE Outer Sans", "../fonts/MADEOuterSans/MADEOuterSans-Thin", "MADE Outer Sans Thin", 100);
+m-font-face("MADE Outer Sans Outline", "../fonts/MADEOuterSans/MADEOuterSansOutline-Bold", "MADE Outer Sans Bold", bold);
